@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author mdominguez
  */
-@WebServlet(name = "MiServlet2", urlPatterns = {"/conversor2"})
-public class MiServlet2 extends HttpServlet {
+@WebServlet(name = "MiServlet3", urlPatterns = {"/conversorAjax"})
+public class MiServlet3 extends HttpServlet {
 
    private Conversor conversor;
 
@@ -50,7 +50,7 @@ public class MiServlet2 extends HttpServlet {
            String resultado2 = "</body></html>";                    
            out.write(resultado2);
        } catch (ServletException ex) {
-           Logger.getLogger(MiServlet2.class.getName()).log(Level.SEVERE, null, ex);
+           Logger.getLogger(MiServlet3.class.getName()).log(Level.SEVERE, null, ex);
        }
     }
     
@@ -69,16 +69,13 @@ public class MiServlet2 extends HttpServlet {
     
     
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {        
-        try{        
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {              
             String tipoIngreso="";
             String tipoResultado="";
             String metodo = req.getParameter("metodo");
             String valor = req.getParameter("valor");
             PrintWriter out = resp.getWriter();
             StringBuilder resultado = new StringBuilder();
-            resultado.append("<html><head><title>Conversor</title></head><body>");
-            resultado.append("<h1>aplicacion conversion temperatura</h2>");
             try{
                 // parsea el valor
                 Double temperatura = Double.parseDouble(valor);
@@ -94,7 +91,7 @@ public class MiServlet2 extends HttpServlet {
                     tipoResultado ="C°";
                     conversion = conversor.farenheitToCelcius(temperatura);
                 }
-                resultado.append("<p> Conversion: "+valor+tipoIngreso+" equivale a : "+ conversion+tipoResultado+"</p>");
+                resultado.append(valor+";"+tipoIngreso+";"+conversion+";"+tipoResultado);
                 req.setAttribute("valor", temperatura);
                 req.setAttribute("resultado", conversion);
                 req.setAttribute("tipoIngreso", tipoIngreso);
@@ -103,16 +100,7 @@ public class MiServlet2 extends HttpServlet {
             }catch(NumberFormatException e){
                 resultado.append("<p> Error: "+e.getMessage()+"</p>");
             }
-            resultado.append(formulario());
             out.write(resultado.toString());
-            
-            RequestDispatcher dispatcher = req.getRequestDispatcher("/historial");
-            dispatcher.include(req, resp);
-            
-            out.print("</body></html>");
-        }catch(ServletException ex){
-            Logger.getLogger(MiServlet2.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
 }

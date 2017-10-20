@@ -36,14 +36,18 @@ public class ListaConversionesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        // obtener una sesion si no existia la crea
         HttpSession sesion = request.getSession(true);
         
+        // de la sesion busca un atributo del tipo lista de Conversion
         List<Conversion> historialLista = (List<Conversion>) sesion.getAttribute("historial");
+        
+        // si la sesion es nueva la lista es null y si es null la creo, y la agrego como atributo de sesion
         if(historialLista == null){
             historialLista = new ArrayList<>();
             sesion.setAttribute("historial", historialLista);
         }
+        
         if(request.getAttribute("valor")!=null && request.getAttribute("resultado")!=null){
             Conversion unaConversion = new Conversion(  Double.valueOf(request.getAttribute("valor").toString()),
                                                 request.getAttribute("tipoIngreso").toString(),
@@ -51,6 +55,8 @@ public class ListaConversionesServlet extends HttpServlet {
                                                 request.getAttribute("tipoResultado").toString());
             historialLista.add(unaConversion);
         }
+        
+        // la lista del historial actualizada
 
         StringBuilder sb = new StringBuilder();
         sb.append("<table border=\"1\">");
